@@ -5,6 +5,7 @@ import {
   Typography,
   IconButton,
   Tooltip,
+  Backdrop,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -14,7 +15,7 @@ import {
   Notifications as NotificationsIcon,
   Logout as LogoutIcon,
 } from '@mui/icons-material';
-import { orange } from '../../constants/color';
+import { orange, blue } from '../../constants/color';
 import { useNavigate } from 'react-router-dom';
 import { Suspense, lazy, useState } from 'react';
 
@@ -49,7 +50,7 @@ const Header = () => {
   return (
     <>
       <Box sx={{ flexGrow: 1 }} height={'4rem'}>
-        <AppBar position="static" sx={{ bgcolor: orange }}>
+        <AppBar position="static" sx={{ bgcolor: blue }}>
           <Toolbar>
             <Typography
               variant="h6"
@@ -63,50 +64,50 @@ const Header = () => {
                 <MenuIcon />
               </IconButton>
             </Box>
+            <Box sx={{ flexGrow: 1 }} />
+            <Box>
+              <IconBtn
+                title="Open Search"
+                icon={<SearchIcon />}
+                onClick={openSearchDialog}
+              />
+              <IconBtn
+                title="New Group"
+                icon={<AddIcon />}
+                onClick={openNewGroup}
+              />
+              <IconBtn
+                title="Manage Group"
+                icon={<GroupIcon />}
+                onClick={navigateToGroup}
+              />
+              <IconBtn
+                title="Notification"
+                icon={<NotificationsIcon />}
+                onClick={openNotification}
+              />
+              <IconBtn
+                title="Logout"
+                icon={<LogoutIcon />}
+                onClick={logoutHandler}
+              />
+            </Box>
           </Toolbar>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box>
-            <IconBtn
-              title="Open Search"
-              icon={<SearchIcon />}
-              onClick={openSearchDialog}
-            />
-            <IconBtn
-              title="New Group"
-              icon={<AddIcon />}
-              onClick={openNewGroup}
-            />
-            <IconBtn
-              title="Manage Group"
-              icon={<GroupIcon />}
-              onClick={navigateToGroup}
-            />
-            <IconBtn
-              title="Notification"
-              icon={<NotificationsIcon />}
-              onClick={openNotification}
-            />
-            <IconBtn
-              title="Logout"
-              icon={<LogoutIcon />}
-              onClick={logoutHandler}
-            />
-          </Box>
         </AppBar>
       </Box>
 
       {isSearch && (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Backdrop open />}>
           <SearchDialog />
         </Suspense>
       )}
       {isNotification && (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Backdrop open />}>
           <NotificationsDialog />
         </Suspense>
       )}
       {isNewGroup && (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Backdrop open />}>
           <NewGroupDialog />
         </Suspense>
       )}

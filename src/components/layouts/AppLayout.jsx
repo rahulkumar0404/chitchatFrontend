@@ -1,13 +1,21 @@
 import Header from './Header.jsx';
 import Title from '../shared/Title.jsx';
 import { Grid } from '@mui/material';
+import ChatList from '../specific/ChatList.jsx';
+import { sampleChats } from '../../constants/sampleData.js';
+import Profile from '../specific/Profile.jsx';
 const AppLayout = () => (WrappedComponent) => {
+
+  const handleDeleteChat = (e, id, groupChat) => {
+    e.preventDefault()
+    console.log("Delete chat", id, groupChat);
+  }
   return (props) => {
     return (
       <>
         <Title />
         <Header />
-        <Grid container height={"calc(100vh - 4rem)"}>
+        <Grid container height={'calc(100vh - 4rem)'}>
           <Grid
             item
             sm={4}
@@ -17,7 +25,11 @@ const AppLayout = () => (WrappedComponent) => {
             }}
             height={'100%'}
           >
-            First
+            <ChatList
+              chats={sampleChats}
+              chatId="2"
+              handleDeleteChat={handleDeleteChat}
+            />
           </Grid>
           <Grid item xs={12} sm={8} md={5} lg={6} height={'100%'}>
             <WrappedComponent {...props} />
@@ -34,7 +46,7 @@ const AppLayout = () => (WrappedComponent) => {
               bgcolor: 'rgba(0,0,0,0.85)',
             }}
           >
-            Third
+           <Profile />
           </Grid>
         </Grid>
       </>
