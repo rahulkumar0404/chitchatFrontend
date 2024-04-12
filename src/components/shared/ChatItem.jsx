@@ -47,7 +47,7 @@ const ChatItem = ({
               width: '10px',
               height: '10px',
               borderRadius: '50%',
-              backgroundColor: 'green',
+              backgroundColor: 'GREEN_COLOR',
               position: 'absolute',
               top: '50%',
               right: '1rem',
