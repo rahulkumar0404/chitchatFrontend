@@ -5,6 +5,7 @@ import ChatList from '../specific/ChatList.jsx';
 import { sampleChats } from '../../constants/sampleData.js';
 import Profile from '../specific/Profile.jsx';
 import { useParams } from 'react-router-dom';
+import { LIGHT_BLACK_COLOR } from '../../constants/color.js';
 const AppLayout = () => (WrappedComponent) => {
   const handleDeleteChat = (e, id, groupChat) => {
     e.preventDefault();
@@ -45,7 +46,7 @@ const AppLayout = () => (WrappedComponent) => {
             sx={{
               display: { xs: 'none', md: 'block' },
               padding: '2rem',
-              bgcolor: 'rgba(0,0,0,0.85)',
+              bgcolor: LIGHT_BLACK_COLOR,
             }}
           >
             <Profile />
