@@ -8,6 +8,7 @@ import {
   Avatar,
 } from '@mui/material';
 import { sampleNotifications } from '../../constants/sampleData';
+import { transformImage } from '../../lib/features';
 import { memo } from 'react';
 const Notifications = () => {
   const friendRequestHandler = ({ id, accept }) => {
@@ -45,7 +46,7 @@ const NotificationItem = memo(({ sender, id }) => {
         spacing={'1rem'}
         width={'100%'}
       >
-        <Avatar src={avatar} />
+        <Avatar src={transformImage(avatar)} />
         <Typography
           variant="body1"
           sx={{
