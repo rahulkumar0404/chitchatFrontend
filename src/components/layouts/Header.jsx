@@ -15,7 +15,7 @@ import {
   Notifications as NotificationsIcon,
   Logout as LogoutIcon,
 } from '@mui/icons-material';
-import { orange, blue } from '../../constants/color';
+import { ORANGE_COLOR, BLUE_COLOR } from '../../constants/color';
 import { useNavigate } from 'react-router-dom';
 import { Suspense, lazy, useState } from 'react';
 
@@ -50,7 +50,7 @@ const Header = () => {
   return (
     <>
       <Box sx={{ flexGrow: 1 }} height={'4rem'}>
-        <AppBar position="static" sx={{ bgcolor: blue }}>
+        <AppBar position="static" sx={{ bgcolor: BLUE_COLOR }}>
           <Toolbar>
             <Typography
               variant="h6"
