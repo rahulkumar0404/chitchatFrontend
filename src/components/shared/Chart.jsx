@@ -49,6 +49,16 @@ const LineChartOptions = {
     y: { grid: { display: false } },
   },
 };
+
+const doughnutChartOptions = {
+  responsive: true,
+  plugins: {
+    legend: {
+      display: false,
+    },
+  },
+  cutout: 120,
+};
 const LineChart = ({ value = [] }) => {
   const data = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June'],
@@ -70,14 +80,19 @@ const DoughnutChart = ({ value = [], labels = [] }) => {
     datasets: [
       {
         data: value,
-        label: 'Total Chats Vs Group Chats',
-        fill: true,
         backgroundColor: ['#7f4f24', '#84a98c'],
         borderColor: ['#c8b6ff', ORANGE_COLOR],
+        offset: 40,
       },
     ],
   };
-  return <Doughnut data={data} />;
+  return (
+    <Doughnut
+      style={{ zIndex: 10 }}
+      data={data}
+      options={doughnutChartOptions}
+    />
+  );
 };
 
 export { LineChart, DoughnutChart };
