@@ -9,6 +9,7 @@ import {
   Box,
   IconButton,
 } from '@mui/material';
+import { makeStyles } from '@material-ui/core/styles';
 import { useState } from 'react';
 import {
   CameraAlt as CameraAltIcon,
@@ -20,20 +21,18 @@ import { VisuallyHidden } from '../components/styles/StyledComponents';
 import { useFileHandler, useInputValidation, useStrongPassword } from '6pp';
 import { usernameValidator } from '../utils/validators.js';
 const Login = () => {
+  const classes = useStyle();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const firstName = useInputValidation('');
-  const lastName = useInputValidation('');
   const password = useStrongPassword();
-  const bio = useInputValidation('');
   const username = useInputValidation('', usernameValidator);
-  const avatar = useFileHandler('single');
 
   const handleLogin = (e) => {
     e.preventDefault();
   };
-  const handleSignUp = (e) => {
-    e.preventDefault();
+
+  const updateLoginState = (newValue) => {
+    setIsLogin(newValue);
   };
   const ErrorMessage = ({ field, ...error }) => {
     return (
@@ -114,7 +113,10 @@ const Login = () => {
                 Login
               </Button>
 
-              <Typography sx={{ textAlign: 'center', margin: '1rem' }}>
+              <Typography
+                sx={{ textAlign: 'center', margin: '1rem' }}
+                className={classes.customPara}
+              >
                 Or
               </Typography>
               <Button
@@ -138,130 +140,179 @@ const Login = () => {
             >
               Sign Up
             </Typography>
-            <form
-              style={{
-                width: '100%',
-                marginTop: '1rem',
-              }}
-            >
-              <Stack position={'relative'} width={'10rem'} margin={'auto'}>
-                <Avatar
-                  sx={{
-                    width: '10rem',
-                    height: '10rem',
-                    objectFit: 'contain',
-                  }}
-                  src={avatar.preview}
-                />
 
-                <IconButton
-                  sx={{
-                    position: 'absolute',
-                    bottom: 0,
-                    right: 0,
-                    color: '#ffffff',
-                    bgcolor: 'rgba(0,0,0,0.5)',
-                    ':hover': { bgcolor: 'rgba(0,0,0,0.7)' },
-                  }}
-                  component="label"
-                >
-                  <>
-                    <CameraAltIcon />
-                    <VisuallyHidden
-                      type="file"
-                      onChange={avatar.changeHandler}
-                    />
-                  </>
-                </IconButton>
-              </Stack>
-
-              {avatar.error && (
-                <ErrorMessage
-                  field={avatar}
-                  m={'1rem auto'}
-                  width={'fit-content'}
-                  display={'block'}
-                />
-              )}
-              <TextField
-                required
-                fullWidth
-                label="FirstName"
-                margin="normal"
-                variant="outlined"
-                value={firstName.value}
-                onChange={firstName.changeHandler}
-              />
-              <TextField
-                required
-                fullWidth
-                label="LastName"
-                margin="normal"
-                variant="outlined"
-                value={lastName.value}
-                onChange={lastName.changeHandler}
-              />
-              <TextField
-                required
-                fullWidth
-                label="Bio"
-                margin="normal"
-                variant="outlined"
-                value={bio.value}
-                onChange={bio.changeHandler}
-              />
-              <TextField
-                required
-                fullWidth
-                label="Username"
-                margin="normal"
-                variant="outlined"
-                value={username.value}
-                onChange={username.changeHandler}
-              />
-
-              {username.error && <ErrorMessage field={username} />}
-              <TextField
-                required
-                fullWidth
-                label="Password"
-                type="text"
-                margin="normal"
-                variant="outlined"
-                value={password.value}
-                onChange={password.changeHandler}
-              />
-
-              {password.error && <ErrorMessage field={password} />}
-              <Button
-                variant="contained"
-                fullWidth
-                color="primary"
-                type="submit"
-                sx={{ margin: '1rem 0' }}
-                onClick={handleSignUp}
-              >
-                Register
-              </Button>
-
-              <Typography sx={{ textAlign: 'center', margin: '1rem' }}>
-                Or
-              </Typography>
-              <Button
-                type="button"
-                variant="text"
-                color="secondary"
-                fullWidth
-                onClick={() => setIsLogin(true)}
-              >
-                Login
-              </Button>
-            </form>
+            <SignUpForm updateLoginState={updateLoginState} />
           </Box>
         )}
       </Paper>
     </Container>
   );
 };
+
+const SignUpForm = ({ updateLoginState }) => {
+  const classes = useStyle();
+  const firstName = useInputValidation('');
+  const lastName = useInputValidation('');
+  const password = useStrongPassword();
+  const bio = useInputValidation('');
+  const username = useInputValidation('', usernameValidator);
+  const avatar = useFileHandler('single');
+
+  const handleSignUp = (e) => {
+    e.preventDefault();
+  };
+
+  const handleBackToLogin = () => {
+    updateLoginState(true);
+  };
+  return (
+    <form
+      style={{
+        width: '100%',
+        marginTop: '1rem',
+      }}
+    >
+      <Stack position={'relative'} width={'10rem'} margin={'auto'}>
+        <Avatar
+          sx={{
+            width: '10rem',
+            height: '10rem',
+            objectFit: 'contain',
+          }}
+          src={avatar.preview}
+        />
+
+        <IconButton
+          sx={{
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+            color: '#ffffff',
+            bgcolor: 'rgba(0,0,0,0.5)',
+            ':hover': { bgcolor: 'rgba(0,0,0,0.7)' },
+          }}
+          component="label"
+        >
+          <>
+            <CameraAltIcon />
+            <VisuallyHidden type="file" onChange={avatar.changeHandler} />
+          </>
+        </IconButton>
+      </Stack>
+
+      {avatar.error && (
+        <ErrorMessage
+          field={avatar}
+          m={'1rem auto'}
+          width={'fit-content'}
+          display={'block'}
+        />
+      )}
+      <Box
+        alignItems={'center'}
+        display={'flex'}
+        justifyContent={'space-between'}
+      >
+        <TextField
+          required
+          label="Firstname"
+          margin="normal"
+          variant="outlined"
+          value={firstName.value}
+          onChange={firstName.changeHandler}
+        />
+        <TextField
+          required
+          label="Lastname"
+          margin="normal"
+          variant="outlined"
+          value={lastName.value}
+          onChange={lastName.changeHandler}
+        />
+      </Box>
+      <TextField
+        required
+        fullWidth
+        label="Bio"
+        margin="normal"
+        variant="outlined"
+        value={bio.value}
+        onChange={bio.changeHandler}
+      />
+      <TextField
+        required
+        fullWidth
+        label="Username"
+        margin="normal"
+        variant="outlined"
+        value={username.value}
+        onChange={username.changeHandler}
+      />
+
+      {username.error && <ErrorMessage field={username} />}
+      <TextField
+        required
+        fullWidth
+        label="Password"
+        type="text"
+        margin="normal"
+        variant="outlined"
+        value={password.value}
+        onChange={password.changeHandler}
+      />
+
+      {password.error && <ErrorMessage field={password} />}
+      <Button
+        variant="contained"
+        fullWidth
+        color="primary"
+        type="submit"
+        sx={{ margin: '1rem 0' }}
+        onClick={handleSignUp}
+      >
+        Register
+      </Button>
+
+      <Typography
+        sx={{ textAlign: 'center', margin: '1rem' }}
+        className={classes.customPara}
+      >
+        Or
+      </Typography>
+      <Button
+        type="button"
+        variant="text"
+        color="secondary"
+        fullWidth
+        onClick={handleBackToLogin}
+      >
+        Login
+      </Button>
+    </form>
+  );
+};
+
+const useStyle = makeStyles((theme) => ({
+  customPara: {
+    position: 'relative',
+    '&::before': {
+      top: 0,
+      left: 10,
+      height: '100%',
+      content: '"------------------------------------"',
+      position: 'absolute',
+      color: '#acb1bdab',
+      boxSizing: 'border-box',
+    },
+    '&::after': {
+      right: 10,
+      height: '100%',
+      content: '"------------------------------------"',
+      position: 'absolute',
+      color: '#acb1bdab',
+      boxSizing: 'border-box',
+    },
+  },
+}));
 
 export default Login;
