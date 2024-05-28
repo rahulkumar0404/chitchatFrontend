@@ -20,13 +20,18 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFileData } from '../../lib/features';
-import { setIsDropzoneOpen } from '../../redux/reducers/others';
+import {
+  setIsDropzoneOpen,
+  setUploadingLoader,
+} from '../../redux/reducers/others';
 import {
   ArrowUpward as ArrowUpwardIcon,
   Clear as ClearIcon,
   Send as SendIcon,
 } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
+import toast from 'react-hot-toast';
+import { useSendAttachmentMutation } from '../../redux/api/api';
 const thumbsContainer = {
   display: 'flex',
   flexDirection: 'row',
@@ -99,13 +104,14 @@ const img = {
 //     </Box>
 //   );
 // };
-const CustomDropzone = (props, anchorEl) => {
+const CustomDropzone = ({props, anchorEl, chatId}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const dispatch = useDispatch();
   const { selectedFileType } = useSelector((state) => state.files);
   const { accept, maxFileSize } = getFileData(selectedFileType);
   const [files, setFiles] = useState([]);
   const [error, setError] = useState('');
+  const [sendAttachments] = useSendAttachmentMutation();
   const [rejectedFile, setRejectedFile] = useState([]);
   const { isDropzoneOpen } = useSelector((state) => state.others);
   const onDrop = useCallback(
@@ -178,8 +184,32 @@ const CustomDropzone = (props, anchorEl) => {
     return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
   }, [files]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, key) => {
     e.preventDefault();
+    if (files.length <= 0) return;
+    if (files.length > 5) {
+      return toast.error('You can only send only 5 file at a time');
+    }
+
+    dispatch(setUploadingLoader(true));
+
+    const toastId = toast.loading(`Sending ${key} ...`);
+    try {
+      const formData = new FormData();
+      formData.append('chatId', chatId);
+      files.forEach((file) => formData.append('files', file));
+      handlerDialogConfirm();
+      const res = await sendAttachments(formData);
+      if (res.data) {
+        toast.success(`${key} sent successfully`, { id: toastId });
+      } else {
+        toast.error(`Failed to send ${key}`, { id: toastId });
+      }
+    } catch (error) {
+      toast.error(error, { id: toastId });
+    } finally {
+      dispatch(setUploadingLoader(false));
+    }
   };
 
   const handleDropzoneHandler = (e) => {
@@ -400,6 +430,7 @@ const CustomDropzone = (props, anchorEl) => {
                 ':disabled': { bgcolor: '#ccc' },
               }}
               disabled={files.length <= 0 || files.length > 5}
+              onClick={(e) => handleSubmit(e, selectedFileType)}
             >
               <SendIcon />
             </IconButton>
