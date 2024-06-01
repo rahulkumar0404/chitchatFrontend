@@ -55,6 +55,16 @@ const api = {
      } catch (error) {
        throw error;
      }
+  },
+
+  getChatDetails: async () => {
+     const instance = createInstance();
+     try {
+       const { data } = await instance.get('/api/v1/user/logout');
+       return data;
+     } catch (error) {
+       throw error;
+     }
   }
 };
 
