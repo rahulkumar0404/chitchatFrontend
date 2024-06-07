@@ -22,36 +22,32 @@ const Notifications = () => {
   const { isNotification } = useSelector((state) => state.others);
   const dispatch = useDispatch();
   const { isLoading, data, isError, error } = useGetNotificationQuery();
-  const [acceptRequest] = useAcceptFriendRequest();
+  const {
+    excuteMutation: acceptFriendRequest,
+    isLoading: isLoadingFriendRequest,
+  } = useMutation(useAcceptFriendRequest);
   const friendRequestHandler = async ({ senderId, accept }) => {
-    try {
-      const res = acceptRequest({ senderId, accept });
-      if (res.data) {
-        console.log('Use socket here');
-        console.log(res.data);
-      } else {
-        toast.error(
-          res.data.error.message || 'Failure to accept request Please try again'
-        );
-      }
-    } catch (err) {
-      console.log(err.message);
-    }
+    dispatch(setIsNotification(false));
+    await acceptFriendRequest('Accepting Request...', {
+      senderId,
+      accept,
+    });
   };
 
-  const handleNotification = () => dispatch(setIsNotification(false));
+  const closeNotificationHandler = () => dispatch(setIsNotification(false));
   useErrors([{ error, isError }]);
   return (
-    <Dialog open={isNotification} onClose={handleNotification}>
+    <Dialog open={isNotification} onClose={closeNotificationHandler}>
       <Stack p={{ xs: '1rem', sm: '2rem' }}>
         <DialogTitle>Notifications</DialogTitle>
         {isLoading ? (
           <Skeleton />
         ) : (
           <>
-            {data.result.length > 0 ? (
-              data.result.map((notification, index) => (
+            {Array.isArray(data.result) && data.result.length > 0 ? (
+              data?.result.map((notification) => (
                 <NotificationItem
+                  key={notification._id}
                   sender={notification.sender}
                   id={notification._id}
                   handler={friendRequestHandler}
