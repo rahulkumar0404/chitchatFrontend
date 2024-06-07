@@ -1,5 +1,4 @@
 import moment from 'moment';
-
 const fileFormat = (url = '') => {
   const fileExt = url.split('.').pop();
 
@@ -17,6 +16,10 @@ const fileFormat = (url = '') => {
 };
 
 const transformImage = (url = '', width = 100) => {
+  if (url && url.includes('upload/')) {
+    const newUrl = url.replace('upload/', `upload/dpr_auto/w_${width}/`);
+    return newUrl;
+  }
   return url;
 };
 
@@ -33,4 +36,52 @@ const getLast7Days = () => {
 
   return last7Days;
 };
-export { fileFormat, transformImage, getLast7Days };
+
+const getFileData = (selectedFileType) => {
+  let accept,
+    maxFileSize,
+    maxFileCount = 5;
+
+  switch (selectedFileType) {
+    case 'image':
+      accept = { 'image/*': ['.png', '.jpeg', '.gif'] };
+      maxFileSize = 2 * 1024 * 1024;
+      break;
+    case 'audio':
+      accept = { 'audio/*': ['.mp3', '.ogg', '.wav', '.webm'] };
+      maxFileSize = 5 * 1024 * 1024;
+      break;
+    case 'video':
+      accept = { 'video/*': ['.mp4', '.webm'] };
+      maxFileSize = 10 * 1024 * 1024;
+      break;
+    case 'file':
+      accept = '*';
+      maxFileSize = 10 * 1024 * 1024;
+      break;
+    default:
+      accept = '/';
+      maxFileSize: 2 * 1024 * 1024;
+  }
+  return {
+    accept,
+    maxFileSize,
+    maxFileCount,
+  };
+};
+
+const getOrSaveFromStorage = ({ key, value, get }) => {
+  if (get)
+    return localStorage.getItem(key)
+      ? JSON.parse(localStorage.getItem(key))
+      : null;
+  else localStorage.setItem(key, JSON.stringify(value));
+};
+
+export {
+  fileFormat,
+  transformImage,
+  getLast7Days,
+  getFileData,
+  getOrSaveFromStorage,
+};
