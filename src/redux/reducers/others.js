@@ -9,6 +9,7 @@ const initialState = {
   isFileMenu: false,
   uploadingLoader: false,
   isDeleteMenu: false,
+  isDropzoneOpen: false,
   selectedDeleteChat: {
     chatId: '',
     groupChat: false,
@@ -46,6 +47,9 @@ const othersSlice = createSlice({
     setSelectedDeleteChat: (state, action) => {
       state.selectedDeleteChat = action.payload;
     },
+    setIsDropzoneOpen: (state, action) => {
+      state.isDropzoneOpen = action.payload;
+    },
   },
 });
 
@@ -61,4 +65,5 @@ export const {
   setSelectedDeleteChat,
   setIsNewGroup,
   setUploadingLoader,
+  setIsDropzoneOpen
 } = othersSlice.actions;
