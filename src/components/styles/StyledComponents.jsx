@@ -1,4 +1,4 @@
-import { styled } from '@mui/material';
+import { Skeleton, keyframes, styled } from '@mui/material';
 import { Link as LinkComponent } from 'react-router-dom';
 import {
   BLACK_COLOR,
@@ -69,3 +69,86 @@ export const CurvedButton = styled('button')`
     background-color: rgba(0, 0, 0, 0.8);
   }
 `;
+
+export const RemoveImageButton = styled('button')`
+  margin-left: 0.5rem;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: bold ';
+  color:rgb(87,78,83)';
+  border: 1px solid #9f7aea;
+  padding: 0 0.75rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  '&:hover': {
+    background-color: #9f7aea;
+    color: #ffffff;
+  }
+`;
+
+export const RemoveRejectedButton = styled('button')`
+  margin-top: 7px;
+  padding-top: 7px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-weight: 500;
+  border-radius: 25px;
+  '&:hover': {
+    background-color: #3490dc;
+    color: #ffffff;
+  }
+`;
+
+export const RemoveFileButton = styled('button')`
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid #d1d5db;
+  background-color: #d1d5db;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: -0.75rem;
+  right: -0.75rem;
+  transition: background-color 0.2s;
+  '&:hover': {
+    background-color: '#ffffff';
+  }
+`;
+
+export const AcceptedFileUnorderedList = styled('ul')`
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(6, 1fr);
+  }
+`;
+
+export const DialogButtons = styled('button')`
+  font: 400 13px/13px sans-serif, serif;
+  width: 50%;
+  height: 90%;
+  border: none;
+  text-align: center;
+`;
+
+const bounceAnimation = keyframes`
+0% {transform: scale(1);}
+50% {transform: scale(1.5);}
+100% {transform: scale(1);}
+`;
+export const BouncingSkleton = styled(Skeleton)(() => ({
+  animation: `${bounceAnimation} 1s infinite`,
+}));
