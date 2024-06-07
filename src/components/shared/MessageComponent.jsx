@@ -1,17 +1,45 @@
-import { memo } from 'react';
+import { memo, useRef } from 'react';
 import moment from 'moment';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, Button } from '@mui/material';
 import { fileFormat } from '../../lib/features';
 import { LIGHT_BLUE_COLOR, BLUE_COLOR } from '../../constants/color';
 import RenderAttachment from './RenderAttachment';
+import { useIsGroupChat } from '../../redux/api/api';
+import { motion } from 'framer-motion';
 const MessageComponent = ({ message, user }) => {
-  const { sender, content, attachments = [], createdAt } = message;
+  const {
+    sender,
+    content,
+    attachment: attachments = [],
+    createdAt,
+    chat: chatId,
+  } = message;
+  // const { isLoading, data, error } = useIsGroupChat(chatId);
   const { _id: id } = sender;
-  const sameSender = id === user.id;
-
+  const sameSender = id === user._id;
   const timeAgo = moment(createdAt).fromNow();
+  const downloadLinkRef = useRef(null);
+
+  // const isNameShow = data && ((data.isGroupChat && !sameSender) || !sameSender);
+  const imageDownload = (url) => {
+    fetch(url)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const url = window.URL.createObjectURL(new Blob([blob]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'image.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      })
+      .catch((error) => console.log('error', error.message));
+  };
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, x: '-100%' }}
+      whileInView={{ opacity: 1, x: 0 }}
       style={{
         alignSelf: sameSender ? 'flex-end' : 'flex-start',
         backgroundColor: sameSender ? BLUE_COLOR : 'white',
@@ -39,16 +67,12 @@ const MessageComponent = ({ message, user }) => {
           const file = fileFormat(url);
           return (
             <Box key={index}>
-              <a
-                href={url}
-                target="_blank"
-                download
-                style={{
-                  color: '#000000',
-                }}
+              <Button
+                onClick={(e) => imageDownload(url)}
+                style={{ color: '#000000', display: 'block' }}
               >
                 {RenderAttachment(file, url)}
-              </a>
+              </Button>
             </Box>
           );
         })}
@@ -59,7 +83,7 @@ const MessageComponent = ({ message, user }) => {
       >
         {timeAgo}
       </Typography>
-    </div>
+    </motion.div>
   );
 };
 
